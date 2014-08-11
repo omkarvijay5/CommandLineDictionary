@@ -1,5 +1,6 @@
 import os
 from wordnik import *
+from wordnik.WordsApi import *
 import sys
 
 
@@ -55,8 +56,13 @@ class CommandLineDict(object):
         self.get_examples(word)
 
     def get_word_of_the_day(self):
-        pass
-
+        words_api = WordsApi(self.client)
+        word_of_the_day = words_api.getWordOfTheDay().word
+        print "The word of the day is %s" % word_of_the_day
+        self.get_definitions(word_of_the_day)
+        self.get_synonyms(word_of_the_day)
+        self.get_antonyms(word_of_the_day)
+        self.get_examples(word_of_the_day)
 
 if __name__ == '__main__':
     class_object = CommandLineDict()
