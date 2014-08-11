@@ -76,6 +76,9 @@ class CommandLineDict(object):
         self.get_antonyms(word_of_the_day)
         self.get_examples(word_of_the_day)
 
+    def play(self):
+        pass
+
 if __name__ == '__main__':
     class_object = CommandLineDict()
     if len(sys.argv) == 1:
@@ -95,3 +98,5 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'ex':
         word = sys.argv[2]
         class_object.get_examples(word)
+    elif sys.argv[1] == 'play':
+        class_object.play()
