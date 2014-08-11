@@ -14,9 +14,12 @@ class CommandLineDict(object):
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
         definitions = word_api.getDefinitions(word, limit=50)
-        print "Definitions of the word %s are" % word
-        for definition in definitions:
-            print '* %s' % definition.text
+        if definitions:
+            print "Definitions of the word %s are" % word
+            for definition in definitions:
+                print '* %s' % definition.text
+        else:
+            print "There are no definitions for the word %s" % word
 
     def get_synonyms(self, word):
         word_api = WordApi.WordApi(self.client)
