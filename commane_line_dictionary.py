@@ -17,7 +17,15 @@ class CommandLineDict(object):
             print '* %s' % definition.text
 
     def get_synonyms(self, word):
-        pass
+        word_api = WordApi.WordApi(self.client)
+        related_words = word_api.getRelatedWords(word)
+        synonyms = []
+        for related_word in related_words:
+            if related_word.relationshipType == 'synonym':
+                for word in related_word.words:
+                    synonyms.append(word)
+        for synonym in synonyms:
+            print "* %s" % synonym
 
 
 if __name__ == '__main__':
