@@ -16,9 +16,15 @@ class CommandLineDict(object):
         for definition in definitions:
             print '* %s' % definition.text
 
+    def get_synonyms(self, word):
+        pass
+
 
 if __name__ == '__main__':
     class_object = CommandLineDict()
     if sys.argv[1] == 'def':
         word = sys.argv[2]
         class_object.get_definitions(word)
+    elif sys.argv[1] == 'syn':
+        word = sys.argv[2]
+        class_object.get_synonyms(word)
