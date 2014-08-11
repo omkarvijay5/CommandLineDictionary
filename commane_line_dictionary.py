@@ -22,7 +22,7 @@ class CommandLineDict(object):
         word_api = WordApi.WordApi(self.client)
         related_words = word_api.getRelatedWords(word)
         synonyms = []
-        if related_words:            
+        if related_words:
             print "Synonyms of the word %s are" % word
             for related_word in related_words:
                 if related_word.relationshipType == 'synonym':
@@ -37,13 +37,16 @@ class CommandLineDict(object):
         word_api = WordApi.WordApi(self.client)
         related_words = word_api.getRelatedWords(word)
         antonyms = []
-        print "Antonyms of the word %s are" % word
-        for related_word in related_words:
-            if related_word.relationshipType == 'antonym':
-                for word in related_word.words:
-                    antonyms.append(word)
-        for antonym in antonyms:
-            print "* %s" % antonym
+        if related_words:
+            print "Antonyms of the word %s are" % word
+            for related_word in related_words:
+                if related_word.relationshipType == 'antonym':
+                    for word in related_word.words:
+                        antonyms.append(word)
+            for antonym in antonyms:
+                print "* %s" % antonym
+        else:
+            print "There are no antonyms for the word %s" % word
 
     def get_examples(self, word):
         word_api = WordApi.WordApi(self.client)
