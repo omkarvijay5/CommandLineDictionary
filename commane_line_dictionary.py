@@ -27,6 +27,9 @@ class CommandLineDict(object):
         for synonym in synonyms:
             print "* %s" % synonym
 
+    def get_antonyms(self, word):
+        pass
+
 
 if __name__ == '__main__':
     class_object = CommandLineDict()
@@ -36,3 +39,6 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'syn':
         word = sys.argv[2]
         class_object.get_synonyms(word)
+    elif sys.argv[1] == 'ant':
+        word = sys.argv[2]
+        class_object.get_antonyms(word)
