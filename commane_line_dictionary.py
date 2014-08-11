@@ -22,13 +22,16 @@ class CommandLineDict(object):
         word_api = WordApi.WordApi(self.client)
         related_words = word_api.getRelatedWords(word)
         synonyms = []
-        print "Synonyms of the word %s are" % word
-        for related_word in related_words:
-            if related_word.relationshipType == 'synonym':
-                for word in related_word.words:
-                    synonyms.append(word)
-        for synonym in synonyms:
-            print "* %s" % synonym
+        if related_words:            
+            print "Synonyms of the word %s are" % word
+            for related_word in related_words:
+                if related_word.relationshipType == 'synonym':
+                    for word in related_word.words:
+                        synonyms.append(word)
+            for synonym in synonyms:
+                print "* %s" % synonym
+        else:
+            print "There are no synonyms for the word %s" % word
 
     def get_antonyms(self, word):
         word_api = WordApi.WordApi(self.client)
