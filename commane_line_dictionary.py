@@ -38,8 +38,11 @@ class CommandLineDict(object):
         for antonym in antonyms:
             print "* %s" % antonym
 
-    def get_examples(word):
-        pass
+    def get_examples(self, word):
+        word_api = WordApi.WordApi(self.client)
+        examples = word_api.getExamples(word).examples
+        for example in examples:
+            print "* %s" % example.text
 
 
 if __name__ == '__main__':
