@@ -44,10 +44,16 @@ class CommandLineDict(object):
         for example in examples:
             print "* %s" % example.text
 
+    def get_dictionary(self, word):
+        pass
+
 
 if __name__ == '__main__':
     class_object = CommandLineDict()
-    if sys.argv[1] == 'def':
+    if len(sys.argv) == 2:
+        word = sys.argv[1]
+        class_object.get_dictionary(word)
+    elif sys.argv[1] == 'def':
         word = sys.argv[2]
         class_object.get_definitions(word)
     elif sys.argv[1] == 'syn':
