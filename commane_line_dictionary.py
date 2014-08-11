@@ -54,9 +54,12 @@ class CommandLineDict(object):
     def get_examples(self, word):
         word_api = WordApi.WordApi(self.client)
         examples = word_api.getExamples(word).examples
-        print "Examples of the word %s are" % word
-        for example in examples:
-            print "* %s" % example.text
+        if examples:
+            print "Examples of the word %s are" % word
+            for example in examples:
+                print "* %s" % example.text
+        else:
+            print "No examples avaiable for the word %s" % word
 
     def get_dictionary(self, word):
         self.get_definitions(word)
