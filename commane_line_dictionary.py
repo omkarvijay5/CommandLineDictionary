@@ -21,11 +21,11 @@ class CommandLineDict(object):
         word_api = WordApi.WordApi(self.client)
         related_words = word_api.getRelatedWords(word)
         synonyms = []
+        print "Synonyms of the word %s are" % word
         for related_word in related_words:
             if related_word.relationshipType == 'synonym':
                 for word in related_word.words:
                     synonyms.append(word)
-        print "Synonyms of the word %s are", % word
         for synonym in synonyms:
             print "* %s" % synonym
 
@@ -33,18 +33,18 @@ class CommandLineDict(object):
         word_api = WordApi.WordApi(self.client)
         related_words = word_api.getRelatedWords(word)
         antonyms = []
+        print "Antonyms of the word %s are" % word
         for related_word in related_words:
             if related_word.relationshipType == 'antonym':
                 for word in related_word.words:
                     antonyms.append(word)
-        print "Antonyms of the word %s are", % word
         for antonym in antonyms:
             print "* %s" % antonym
 
     def get_examples(self, word):
         word_api = WordApi.WordApi(self.client)
         examples = word_api.getExamples(word).examples
-        print "Examples of the word %s are", % word
+        print "Examples of the word %s are" % word
         for example in examples:
             print "* %s" % example.text
 
@@ -54,10 +54,15 @@ class CommandLineDict(object):
         self.get_antonyms(word)
         self.get_examples(word)
 
+    def get_word_of_the_day(self):
+        pass
+
 
 if __name__ == '__main__':
     class_object = CommandLineDict()
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
+        class_object.get_word_of_the_day()
+    elif len(sys.argv) == 2:
         word = sys.argv[1]
         class_object.get_dictionary(word)
     elif sys.argv[1] == 'def':
