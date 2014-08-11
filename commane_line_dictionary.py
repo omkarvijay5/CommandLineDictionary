@@ -28,7 +28,15 @@ class CommandLineDict(object):
             print "* %s" % synonym
 
     def get_antonyms(self, word):
-        pass
+        word_api = WordApi.WordApi(self.client)
+        related_words = word_api.getRelatedWords(word)
+        antonyms = []
+        for related_word in related_words:
+            if related_word.relationshipType == 'antonym':
+                for word in related_word.words:
+                    antonyms.append(word)
+        for antonym in antonyms:
+            print "* %s" % antonym
 
 
 if __name__ == '__main__':
