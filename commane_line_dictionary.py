@@ -1,7 +1,8 @@
 import os
+import random
+import sys
 from wordnik import *
 from wordnik.WordsApi import *
-import sys
 
 
 class CommandLineDict(object):
@@ -20,6 +21,7 @@ class CommandLineDict(object):
                 print '* %s' % definition.text
         else:
             print "There are no definitions for the word %s" % word
+        return definitions
 
     def get_synonyms(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -35,6 +37,7 @@ class CommandLineDict(object):
                 print "* %s" % synonym
         else:
             print "There are no synonyms for the word %s" % word
+        return synonyms
 
     def get_antonyms(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -50,6 +53,7 @@ class CommandLineDict(object):
                 print "* %s" % antonym
         else:
             print "There are no antonyms for the word %s" % word
+        return antonyms
 
     def get_examples(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -79,10 +83,16 @@ class CommandLineDict(object):
     def play(self):
         pass
 
+    def display_words(self, resource_type, related_words):
+        pass
+
+
 if __name__ == '__main__':
     class_object = CommandLineDict()
     if len(sys.argv) == 1:
         class_object.get_word_of_the_day()
+    elif sys.argv[1] == 'play':
+        class_object.play()
     elif len(sys.argv) == 2:
         word = sys.argv[1]
         class_object.get_dictionary(word)
@@ -98,5 +108,3 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'ex':
         word = sys.argv[2]
         class_object.get_examples(word)
-    elif sys.argv[1] == 'play':
-        class_object.play()
