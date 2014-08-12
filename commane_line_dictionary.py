@@ -15,12 +15,6 @@ class CommandLineDict(object):
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
         definitions = word_api.getDefinitions(word, limit=50)
-        if definitions:
-            print "Definitions of the word %s are" % word
-            for definition in definitions:
-                print '* %s' % definition.text
-        else:
-            print "There are no definitions for the word %s" % word
         return definitions
 
     def get_synonyms(self, word):
@@ -40,15 +34,11 @@ class CommandLineDict(object):
         related_words = word_api.getRelatedWords(word)
         antonyms = []
         if related_words:
-            print "Antonyms of the word %s are" % word
             for related_word in related_words:
                 if related_word.relationshipType == 'antonym':
                     for word in related_word.words:
                         antonyms.append(word)
-            for antonym in antonyms:
-                print "* %s" % antonym
-        else:
-            print "There are no antonyms for the word %s" % word
+
         return antonyms
 
     def get_examples(self, word):
@@ -80,12 +70,16 @@ class CommandLineDict(object):
         pass
 
     def display_words(self, resource_type, related_words, word):
-        print "{0} of the word {1} are".format(resource_type, word)
         if related_words:
-            for word in related_words:
-                print "* %s" % word
+            print "{0} of the word {1} are".format(resource_type, word)
+            if hasattr(related_words[0], 'text'):
+                for definition in related_words:
+                    print "* %s" % definition.text
+            else:
+                for word in related_words:
+                    print "* %s" % word
         else:
-            "No {0} for the word {1}".format(resource_type, word)
+            print "No {0} for the word {1}".format(resource_type, word)
 
 
 if __name__ == '__main__':
@@ -99,14 +93,16 @@ if __name__ == '__main__':
         class_object.get_dictionary(word)
     elif sys.argv[1] == 'def':
         word = sys.argv[2]
-        class_object.get_definitions(word)
+        definitions = class_object.get_definitions(word)
+        class_object.display_words('Definitions', definitions, word)
     elif sys.argv[1] == 'syn':
         word = sys.argv[2]
         synonyms = class_object.get_synonyms(word)
         class_object.display_words('Synonyms', synonyms, word)
     elif sys.argv[1] == 'ant':
         word = sys.argv[2]
-        class_object.get_antonyms(word)
+        antonyms = class_object.get_antonyms(word)
+        class_object.display_words('Antonyms', antonyms, word)
     elif sys.argv[1] == 'ex':
         word = sys.argv[2]
         class_object.get_examples(word)
