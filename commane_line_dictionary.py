@@ -28,15 +28,11 @@ class CommandLineDict(object):
         related_words = word_api.getRelatedWords(word)
         synonyms = []
         if related_words:
-            print "Synonyms of the word %s are" % word
             for related_word in related_words:
                 if related_word.relationshipType == 'synonym':
                     for word in related_word.words:
                         synonyms.append(word)
-            for synonym in synonyms:
-                print "* %s" % synonym
-        else:
-            print "There are no synonyms for the word %s" % word
+
         return synonyms
 
     def get_antonyms(self, word):
@@ -83,8 +79,13 @@ class CommandLineDict(object):
     def play(self):
         pass
 
-    def display_words(self, resource_type, related_words):
-        pass
+    def display_words(self, resource_type, related_words, word):
+        print "{0} of the word {1} are".format(resource_type, word)
+        if related_words:
+            for word in related_words:
+                print "* %s" % word
+        else:
+            "No {0} for the word {1}".format(resource_type, word)
 
 
 if __name__ == '__main__':
@@ -101,7 +102,8 @@ if __name__ == '__main__':
         class_object.get_definitions(word)
     elif sys.argv[1] == 'syn':
         word = sys.argv[2]
-        class_object.get_synonyms(word)
+        synonyms = class_object.get_synonyms(word)
+        class_object.display_words('Synonyms', synonyms, word)
     elif sys.argv[1] == 'ant':
         word = sys.argv[2]
         class_object.get_antonyms(word)
