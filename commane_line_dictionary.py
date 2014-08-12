@@ -67,7 +67,31 @@ class CommandLineDict(object):
         self.get_examples(word_of_the_day)
 
     def play(self):
-        pass
+        words_api = WordsApi(self.client)
+        random_word = words_api.getRandomWord().word
+        options = {0: 'get_synonyms', 1: 'get_antonyms', 2: 'get_definitions'}
+        while True:
+            random_num = random.choice([0, 1, 2])
+            method = getattr(self, options[random_num])
+            related_words = method(random_word)
+            if related_words:
+                related_word = related_words.pop()
+                if hasattr(related_word, 'text'):
+                    print "Definition of the word is given below \
+                    answer the related word"
+                    print "* %s" % related_word.text
+                else:
+                    print "Word is %s" % related_word
+            else:
+                jumbled_word = list(random_word)
+                random.shuffle(jumbled_word)
+                jumbled_word = ''.join(jumbled_word)
+                print "jumbled word is %s" % jumbled_word
+            entered_word = raw_input("Enter your answer")
+            print "random word is", random_word
+            if entered_word in related_words or entered_word == random_word:
+                print "You win. You have entered correct word"
+                break
 
     def display_words(self, resource_type, related_words, word):
         if related_words:
