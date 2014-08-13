@@ -77,17 +77,18 @@ class CommandLineDict(object):
             if option == 1:
                 self.definitions = self.get_definitions(word)
                 if self.definitions:
-                    self.options.push(1)
+                    self.options.append(1)
             elif option == 2:
                 self.synonyms = self.get_synonyms(word)
                 if self.synonyms:
-                    self.options.push(2)
+                    self.options.append(2)
             elif option == 3:
                 self.antonyms = self.get_antonyms(word)
                 if self.antonyms:
-                    self.options.push(3)
+                    self.options.append(3)
         if self.options:
-            random_number = self.options.reverse().pop()
+            print "self.options is", self.options
+            random_number = self.options.pop()
             if random_number == 1:
                 definition = self.definitions.pop()
                 print "Definition is:"
@@ -107,22 +108,6 @@ class CommandLineDict(object):
         random_word = words_api.getRandomWord().word
         self.give_hint(random_word)
         while True:
-            random_num = random.choice([0, 1, 2])
-            method = getattr(self, options[random_num])
-            related_words = method(random_word)
-            if related_words:
-                related_word = related_words.pop()
-                if hasattr(related_word, 'text'):
-                    print "Definition of the word is given below \
-                    answer the related word"
-                    print "* %s" % related_word.text
-                else:
-                    print "Word is %s" % related_word
-            else:
-                jumbled_word = list(random_word)
-                random.shuffle(jumbled_word)
-                jumbled_word = ''.join(jumbled_word)
-                print "jumbled word is %s" % jumbled_word
             entered_word = raw_input("Enter your answer")
             print "random word is", random_word
             if entered_word in related_words or entered_word == random_word:
