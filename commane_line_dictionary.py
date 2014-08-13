@@ -11,6 +11,9 @@ class CommandLineDict(object):
         apiUrl = 'http://api.wordnik.com/v4'
         apiKey = os.environ['API_KEY']
         self.client = swagger.ApiClient(apiKey, apiUrl)
+        self.antonyms = []
+        self.synonyms = []
+        self.definitions = []
 
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -65,6 +68,9 @@ class CommandLineDict(object):
         self.get_synonyms(word_of_the_day)
         self.get_antonyms(word_of_the_day)
         self.get_examples(word_of_the_day)
+
+    def give_hint(self):
+        pass
 
     def play(self):
         words_api = WordsApi(self.client)
