@@ -73,7 +73,6 @@ class CommandLineDict(object):
         self.get_examples(word_of_the_day)
 
     def give_hint(self, word, from_hint=None):
-        print "answer is ", word
         if not from_hint:
             random_options = [0, 1, 2, 3]
             for option in random_options:
@@ -91,12 +90,16 @@ class CommandLineDict(object):
                     self.antonyms = self.get_antonyms(word)
                     if self.antonyms:
                         self.options.append(3)
+        print "options are", self.options
         if self.options:
+            print "i am in options"
             random_number = self.options.pop()
-            if random_number == 0:
-                jumbled_word = ''.join(random.shuffle(list(word)))
-                print "jumbled answer is %s. \
-                Try to guess the word", jumbled_word
+            if random_number == 0 and from_hint:
+                word_list = list(word)
+                random.shuffle(word_list)
+                jumbled_word = ''.join(word_list)
+                print "jumbled word is %s. \
+                Try to guess the word" % jumbled_word
             if random_number == 1:
                 definition = self.definitions.pop()
                 print "Definition is:"
@@ -116,8 +119,12 @@ class CommandLineDict(object):
     def play(self):
         words_api = WordsApi(self.client)
         random_word = words_api.getRandomWord().word
+        random_word = 'poor'
         self.give_hint(random_word)
         while True:
+            print "answer is", random_word
+            print "synonyms are", self.synonyms
+            print "antonyms are", self.antonyms
             entered_word = raw_input("Enter your answer")
             entered_word = ''.join(entered_word.split())
             print "random word is", random_word
@@ -129,6 +136,7 @@ class CommandLineDict(object):
                 print "select an option from below"
                 print "1- Try again\n 2- Hint\n 3- Quit"
                 option = raw_input("Enter an option")
+                option = int(option)
                 if option == 1:
                     pass
                 elif option == 2:
