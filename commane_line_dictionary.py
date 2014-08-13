@@ -72,9 +72,11 @@ class CommandLineDict(object):
         self.get_examples(word_of_the_day)
 
     def give_hint(self, word):
-        random_options = [1, 2, 3]
+        random_options = [0, 1, 2, 3]
         for option in random_options:
-            if option == 1:
+            if option == 0:
+                self.options.append(0)
+            elif option == 1:
                 self.definitions = self.get_definitions(word)
                 if self.definitions:
                     self.options.append(1)
@@ -87,8 +89,11 @@ class CommandLineDict(object):
                 if self.antonyms:
                     self.options.append(3)
         if self.options:
-            print "self.options is", self.options
             random_number = self.options.pop()
+            if random_number == 0:
+                jumbled_word = ''.join(random.shuffle(list(word)))
+                print "jumbled answer is %s. \
+                Try to guess the word", jumbled_word
             if random_number == 1:
                 definition = self.definitions.pop()
                 print "Definition is:"
@@ -102,6 +107,8 @@ class CommandLineDict(object):
                 antonym = self.antonyms.pop()
                 print "Antonym is %s" % antonym
                 print "Try to guess another antonym or synonym"
+        else:
+            print "Sufficient hits have been given try to guess the word"
 
     def play(self):
         words_api = WordsApi(self.client)
