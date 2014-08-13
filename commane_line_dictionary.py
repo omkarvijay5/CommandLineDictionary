@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+
 from wordnik import *
 from wordnik.WordsApi import *
 
@@ -31,7 +32,7 @@ class CommandLineDict(object):
                 if related_word.relationshipType == 'synonym':
                     for word in related_word.words:
                         synonyms.append(word)
-
+        synonyms = [synonym.lower() for synonym in synonyms]
         return synonyms
 
     def get_antonyms(self, word):
@@ -43,7 +44,7 @@ class CommandLineDict(object):
                 if related_word.relationshipType == 'antonym':
                     for word in related_word.words:
                         antonyms.append(word)
-
+        antonyms = [antonym.lower() for antonym in antonyms]
         return antonyms
 
     def get_examples(self, word):
@@ -72,6 +73,7 @@ class CommandLineDict(object):
         self.get_examples(word_of_the_day)
 
     def give_hint(self, word):
+        print "answer is ", word
         random_options = [0, 1, 2, 3]
         for option in random_options:
             if option == 0:
@@ -117,7 +119,7 @@ class CommandLineDict(object):
         while True:
             entered_word = raw_input("Enter your answer")
             print "random word is", random_word
-            if entered_word in related_words or entered_word == random_word:
+            if entered_word in self.synonyms or entered_word == random_word:
                 print "You win. You have entered correct word"
                 break
 
