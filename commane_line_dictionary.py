@@ -72,24 +72,25 @@ class CommandLineDict(object):
         self.get_antonyms(word_of_the_day)
         self.get_examples(word_of_the_day)
 
-    def give_hint(self, word):
+    def give_hint(self, word, from_hint=None):
         print "answer is ", word
-        random_options = [0, 1, 2, 3]
-        for option in random_options:
-            if option == 0:
-                self.options.append(0)
-            elif option == 1:
-                self.definitions = self.get_definitions(word)
-                if self.definitions:
-                    self.options.append(1)
-            elif option == 2:
-                self.synonyms = self.get_synonyms(word)
-                if self.synonyms:
-                    self.options.append(2)
-            elif option == 3:
-                self.antonyms = self.get_antonyms(word)
-                if self.antonyms:
-                    self.options.append(3)
+        if not from_hint:
+            random_options = [0, 1, 2, 3]
+            for option in random_options:
+                if option == 0:
+                    self.options.append(0)
+                elif option == 1:
+                    self.definitions = self.get_definitions(word)
+                    if self.definitions:
+                        self.options.append(1)
+                elif option == 2:
+                    self.synonyms = self.get_synonyms(word)
+                    if self.synonyms:
+                        self.options.append(2)
+                elif option == 3:
+                    self.antonyms = self.get_antonyms(word)
+                    if self.antonyms:
+                        self.options.append(3)
         if self.options:
             random_number = self.options.pop()
             if random_number == 0:
@@ -118,10 +119,24 @@ class CommandLineDict(object):
         self.give_hint(random_word)
         while True:
             entered_word = raw_input("Enter your answer")
+            entered_word = ''.join(entered_word.split())
             print "random word is", random_word
-            if entered_word in self.synonyms or entered_word == random_word:
+            if entered_word in self.synonyms or entered_word in self.antonyms or entered_word == random_word:
                 print "You win. You have entered correct word"
                 break
+            else:
+                print "Oooops wrong answer... !!"
+                print "select an option from below"
+                print "1- Try again\n 2- Hint\n 3- Quit"
+                option = raw_input("Enter an option")
+                if option == 1:
+                    pass
+                elif option == 2:
+                    from_hint = 1
+                    self.give_hint(random_word, from_hint)
+                elif option == 3:
+                   print "See you soon"
+                   break
 
     def display_words(self, resource_type, related_words, word):
         if related_words:
