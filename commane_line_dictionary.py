@@ -14,6 +14,7 @@ class CommandLineDict(object):
         self.antonyms = []
         self.synonyms = []
         self.definitions = []
+        self.options = []
 
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -71,18 +72,35 @@ class CommandLineDict(object):
         self.get_examples(word_of_the_day)
 
     def give_hint(self, word):
-        options = [1, 2, 3]
-        for option in options:
+        random_options = [1, 2, 3]
+        for option in random_options:
             if option == 1:
-                definitions = self.get_definitions(word)
-                if definitions:
-                    for definition in definitions:
-                        self.definitions.push(definition)
+                self.definitions = self.get_definitions(word)
+                if self.definitions:
+                    self.options.push(1)
             elif option == 2:
                 self.synonyms = self.get_synonyms(word)
+                if self.synonyms:
+                    self.options.push(2)
             elif option == 3:
                 self.antonyms = self.get_antonyms(word)
-
+                if self.antonyms:
+                    self.options.push(3)
+        if self.options:
+            random_number = self.options.reverse().pop()
+            if random_number == 1:
+                definition = self.definitions.pop()
+                print "Definition is:"
+                print "%s" % definition
+                print "Try to guess the word"
+            elif random_number == 2:
+                synonym = self.synonyms.pop()
+                print "Synonym is %s" % synonym
+                print "Try to guess another synonym or antonym"
+            elif random_number == 3:
+                antonym = self.antonyms.pop()
+                print "Antonym is %s" % antonym
+                print "Try to guess another antonym or synonym"
 
     def play(self):
         words_api = WordsApi(self.client)
