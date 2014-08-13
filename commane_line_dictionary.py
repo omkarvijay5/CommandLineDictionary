@@ -106,7 +106,6 @@ class CommandLineDict(object):
         words_api = WordsApi(self.client)
         random_word = words_api.getRandomWord().word
         self.give_hint(random_word)
-        options = {0: 'get_synonyms', 1: 'get_antonyms', 2: 'get_definitions'}
         while True:
             random_num = random.choice([0, 1, 2])
             method = getattr(self, options[random_num])
