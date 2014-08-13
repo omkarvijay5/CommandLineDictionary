@@ -18,6 +18,7 @@ class CommandLineDict(object):
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
         definitions = word_api.getDefinitions(word, limit=50)
+        definitions = [definition.text for definition in definitions]
         return definitions
 
     def get_synonyms(self, word):
@@ -69,12 +70,24 @@ class CommandLineDict(object):
         self.get_antonyms(word_of_the_day)
         self.get_examples(word_of_the_day)
 
-    def give_hint(self):
-        pass
+    def give_hint(self, word):
+        options = [1, 2, 3]
+        for option in options:
+            if option == 1:
+                definitions = self.get_definitions(word)
+                if definitions:
+                    for definition in definitions:
+                        self.definitions.push(definition)
+            elif option == 2:
+                self.synonyms = self.get_synonyms(word)
+            elif option == 3:
+                self.antonyms = self.get_antonyms(word)
+
 
     def play(self):
         words_api = WordsApi(self.client)
         random_word = words_api.getRandomWord().word
+        self.give_hint(random_word)
         options = {0: 'get_synonyms', 1: 'get_antonyms', 2: 'get_definitions'}
         while True:
             random_num = random.choice([0, 1, 2])
@@ -102,12 +115,8 @@ class CommandLineDict(object):
     def display_words(self, resource_type, related_words, word):
         if related_words:
             print "{0} of the word {1} are".format(resource_type, word)
-            if hasattr(related_words[0], 'text'):
-                for definition in related_words:
-                    print "* %s" % definition.text
-            else:
-                for word in related_words:
-                    print "* %s" % word
+            for word in related_words:
+                print "* %s" % word
         else:
             print "No {0} for the word {1}".format(resource_type, word)
 
