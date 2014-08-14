@@ -78,7 +78,7 @@ class CommandLineDict(object):
             for option in random_options:
                 if option == 0:
                     self.options.append(0)
-                elif option == 1:
+                if option == 1:
                     self.definitions = self.get_definitions(word)
                     if self.definitions:
                         self.options.append(1)
@@ -90,16 +90,21 @@ class CommandLineDict(object):
                     self.antonyms = self.get_antonyms(word)
                     if self.antonyms:
                         self.options.append(3)
-        print "options are", self.options
+        if not self.definitions and 1 in self.options:
+            self.options.remove(1)
+        if not self.synonyms and 2 in self.options:
+            self.options.remove(2)
+        if not self.antonyms and 3 in self.options:
+            self.options.remove(3)
         if self.options:
-            print "i am in options"
-            random_number = self.options.pop()
+            random_number = random.choice(self.options)
             if random_number == 0 and from_hint:
                 word_list = list(word)
                 random.shuffle(word_list)
                 jumbled_word = ''.join(word_list)
                 print "jumbled word is %s. \
                 Try to guess the word" % jumbled_word
+                self.options.remove(0)
             if random_number == 1:
                 definition = self.definitions.pop()
                 print "Definition is:"
@@ -119,16 +124,12 @@ class CommandLineDict(object):
     def play(self):
         words_api = WordsApi(self.client)
         random_word = words_api.getRandomWord().word
-        random_word = 'poor'
         self.give_hint(random_word)
         while True:
-            print "answer is", random_word
-            print "synonyms are", self.synonyms
-            print "antonyms are", self.antonyms
             entered_word = raw_input("Enter your answer")
-            entered_word = ''.join(entered_word.split())
-            print "random word is", random_word
-            if entered_word in self.synonyms or entered_word in self.antonyms or entered_word == random_word:
+            entered_word = ''.join(entered_word.lower().split())
+            if (entered_word in self.synonyms or
+               entered_word in self.antonyms or entered_word == random_word):
                 print "You win. You have entered correct word"
                 break
             else:
@@ -136,15 +137,24 @@ class CommandLineDict(object):
                 print "select an option from below"
                 print "1- Try again\n 2- Hint\n 3- Quit"
                 option = raw_input("Enter an option")
-                option = int(option)
+                try:
+                    option = int(option)
+                except:
+                    print "Enter a valid option"
                 if option == 1:
                     pass
                 elif option == 2:
                     from_hint = 1
                     self.give_hint(random_word, from_hint)
                 elif option == 3:
-                   print "See you soon"
-                   break
+                    print "Correct answer is %s" % random_word
+                    synonyms = self.get_synonyms(random_word)
+                    antonyms = self.get_antonyms(random_word)
+                    self.display_words("Synonyms", synonyms, random_word)
+                    self.display_words("Antonyms", antonyms, random_word)
+                    self.get_dictionary(random_word)
+                    print "See you soon"
+                    break
 
     def display_words(self, resource_type, related_words, word):
         if related_words:
