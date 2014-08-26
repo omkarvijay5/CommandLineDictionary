@@ -1,8 +1,11 @@
 import unittest
-
-from command_line_dictionary import CommandLineDict
+import mock
+import os
+from mock import MagicMock
 from wordnik import *
-from wordnik.WordsApi import *
+from command_line_dictionary import CommandLineDict
+from mock import patch
+import wordnik
 
 
 class TestCommandLineDict(unittest.TestCase):
@@ -13,10 +16,15 @@ class TestCommandLineDict(unittest.TestCase):
         self.client = swagger.ApiClient(apiKey, apiUrl)
         self.test_object = CommandLineDict()
 
-    def test_get_synonyms(self):
-        word = 'hello'
-        synonyms = self.test_object.get_synonyms(word)
-        self.assertEqual(len(synonyms), 10)
+    @patch('wordnik.WordApi.WordApi')
+    def test_get_definitions(self, mock_object):
+        instance = mock_object.return_value
+        mock = MagicMock()
+        instance.getDefinitions.return_value = [mock, mock, mock]
+        original_call = wordnik.WordApi.WordApi().getDefinitions()
+        assert len(instance.getDefinitions()) == len(original_call)
+        for test_mock in original_call:
+            assert test_mock == mock
 
 if __name__ == '__main__':
     unittest.main()
