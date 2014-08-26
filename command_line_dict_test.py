@@ -20,11 +20,11 @@ class TestCommandLineDict(unittest.TestCase):
     def test_get_definitions(self, mock_object):
         instance = mock_object.return_value
         mock = MagicMock()
+        mock.text = 1
         instance.getDefinitions.return_value = [mock, mock, mock]
-        original_call = wordnik.WordApi.WordApi().getDefinitions()
-        assert len(instance.getDefinitions()) == len(original_call)
-        for test_mock in original_call:
-            assert test_mock == mock
+        original_call = self.test_object.get_definitions(mock)
+        self.assertEqual(len(instance.getDefinitions()), len(original_call))
+        self.assertEqual(original_call, [1, 1, 1])
 
 if __name__ == '__main__':
     unittest.main()
