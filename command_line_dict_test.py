@@ -26,5 +26,21 @@ class TestCommandLineDict(unittest.TestCase):
         self.assertEqual(len(instance.getDefinitions()), len(original_call))
         self.assertEqual(original_call, [1, 1, 1])
 
+    @patch('wordnik.WordApi.WordApi')
+    def test_get_synonyms(self, mock_object):
+        instance = mock_object.return_value
+        mock = MagicMock()
+        mock.relationshipType = "synonym"
+        mock.words = ['Test1', 'Test2', 'Test3']
+        instance.getRelatedWords.return_value = [mock, mock, mock]
+        original_call = self.test_object.get_synonyms('test')
+        self.assertEqual(len(original_call), 9)
+        result = ['test1', 'test2', 'test3',
+                  'test1', 'test2', 'test3',
+                  'test1', 'test2', 'test3']
+        self.assertEqual(original_call, result)
+
+
+
 if __name__ == '__main__':
     unittest.main()
