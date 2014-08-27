@@ -1,12 +1,13 @@
 import unittest
-import mock
 import os
 from mock import MagicMock
 from wordnik import *
-from command_line_dictionary import CommandLineDict
 from mock import patch
-import wordnik
 import pdb
+import sys
+from StringIO import StringIO
+from command_line_dictionary import CommandLineDict
+
 
 
 class TestCommandLineDict(unittest.TestCase):
@@ -52,6 +53,23 @@ class TestCommandLineDict(unittest.TestCase):
         self.assertEqual(len(original_call), 6)
         result = ['test1', 'test2', 'test1', 'test2', 'test1', 'test2']
         self.assertEqual(result, original_call)
+
+    @patch('wordnik.WordApi.WordApi')
+    def test_get_example(self, mock_object):
+        instance = mock_object.return_value
+        mock = MagicMock()
+        mock.text = 'test1'
+        mock.examples = [mock, mock, mock]
+        instance.getExamples.return_value = mock
+        saved_stdout = sys.stdout
+        try:
+            out = StringIO()
+            sys.stdout = out
+            original_call = self.test_object.get_examples('test_word')
+            output = out.getvalue().strip()
+            self.assertEqual(output, 'Examples of the word test_word are\n* test1\n* test1\n* test1')
+        finally:
+            sys.stdout=saved_stdout
 
 if __name__ == '__main__':
     unittest.main()
