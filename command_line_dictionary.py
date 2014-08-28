@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import pdb
 
 from wordnik import *
 from wordnik.WordsApi import *
@@ -20,8 +21,10 @@ class CommandLineDict(object):
     def get_definitions(self, word):
         word_api = WordApi.WordApi(self.client)
         definitions = word_api.getDefinitions(word, limit=50)
-        definitions = [definition.text for definition in definitions]
-        return definitions
+        if definitions:
+            definitions = [definition.text for definition in definitions]
+            return definitions
+        return []
 
     def get_synonyms(self, word):
         word_api = WordApi.WordApi(self.client)
@@ -160,9 +163,21 @@ class CommandLineDict(object):
         if related_words:
             print "{0} of the word {1} are".format(resource_type, word)
             for word in related_words:
-                print "* %s" % word
+                print word
         else:
-            print "No {0} for the word {1}".format(resource_type, word)
+            if resource_type is 'Definitions':
+                words_api = WordsApi(self.client)
+                search_words = words_api.searchWords(word)
+                if search_words.totalResults == 0:
+                    print "There are no definition for the word %s" % word
+                else:
+                    search_results = search_words.searchResults
+                    search_words = [search_word.word for search_word in search_results]
+                    print "There is no such word. Do you mean"
+                    for word in search_words:
+                        print "%s , " % word,
+            else:
+                print "No {0} for the word {1}".format(resource_type, word)
 
 
 if __name__ == '__main__':
