@@ -5,6 +5,7 @@ import pdb
 
 from wordnik import *
 from wordnik.WordsApi import *
+import wordnik
 
 
 class CommandLineDict(object):
@@ -61,13 +62,17 @@ class CommandLineDict(object):
             print "No examples avaiable for the word %s" % word
 
     def get_dictionary(self, word):
-        self.get_definitions(word)
-        self.get_synonyms(word)
-        self.get_antonyms(word)
+        definitions = self.get_definitions(word)
+        synonyms = self.get_synonyms(word)
+        antonyms = self.get_antonyms(word)
         self.get_examples(word)
+        self.display_words("Synonyms", synonyms, word)
+        self.display_words("Antonyms", antonyms, word)
+        self.display_words("Definitions", definitions, word)
 
     def get_word_of_the_day(self):
-        words_api = WordsApi(self.client)
+        words_api = wordnik.WordsApi.WordsApi(self.client)
+        print "words api is", words_api
         word_of_the_day = words_api.getWordOfTheDay().word
         print "The word of the day is %s" % word_of_the_day
         self.get_definitions(word_of_the_day)
@@ -153,8 +158,6 @@ class CommandLineDict(object):
                     print "Correct answer is %s" % random_word
                     synonyms = self.get_synonyms(random_word)
                     antonyms = self.get_antonyms(random_word)
-                    self.display_words("Synonyms", synonyms, random_word)
-                    self.display_words("Antonyms", antonyms, random_word)
                     self.get_dictionary(random_word)
                     print "See you soon"
                     break
