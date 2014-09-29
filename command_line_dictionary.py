@@ -72,13 +72,15 @@ class CommandLineDict(object):
 
     def get_word_of_the_day(self):
         words_api = wordnik.WordsApi.WordsApi(self.client)
-        print "words api is", words_api
         word_of_the_day = words_api.getWordOfTheDay().word
         print "The word of the day is %s" % word_of_the_day
-        self.get_definitions(word_of_the_day)
-        self.get_synonyms(word_of_the_day)
-        self.get_antonyms(word_of_the_day)
-        self.get_examples(word_of_the_day)
+        definitions = self.get_definitions(word_of_the_day)
+        synonyms = self.get_synonyms(word_of_the_day)
+        antonyms = self.get_antonyms(word_of_the_day)
+        examples = self.get_examples(word_of_the_day)
+        self.display_words('Definitions', definitions, word_of_the_day)
+        self.display_words('Synonyms', synonyms, word_of_the_day)
+        self.display_words('Antonyms', antonyms, word_of_the_day)
 
     def give_hint(self, word, from_hint=None):
         if not from_hint:
@@ -130,8 +132,9 @@ class CommandLineDict(object):
             print "Sufficient hits have been given try to guess the word"
 
     def play(self):
-        words_api = WordsApi(self.client)
+        words_api = wordnik.WordsApi.WordsApi(self.client)
         random_word = words_api.getRandomWord().word
+        print "random word is", random_word
         self.give_hint(random_word)
         while True:
             entered_word = raw_input("Enter your answer")
@@ -169,7 +172,7 @@ class CommandLineDict(object):
                 print word
         else:
             if resource_type is 'Definitions':
-                words_api = WordsApi(self.client)
+                words_api = wordnik.WordsApi.WordsApi(self.client)
                 search_words = words_api.searchWords(word)
                 if search_words.totalResults == 0:
                     print "There are no definition for the word %s" % word
